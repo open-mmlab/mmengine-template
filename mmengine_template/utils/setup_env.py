@@ -15,6 +15,10 @@ def register_all_modules(init_default_scope: bool = True) -> None:
             understand more about the registry, please refer to `docs <https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/registry.md>`_
             Defaults to True.
     """  # noqa
+    # Register transforms and cnn blocks defined in MMCV.
+    import mmcv.cnn  # noqa: F401,F403
+    import mmcv.transforms  # noqa: F401,F403
+
     import mmengine_template.datasets  # noqa: F401,F403
     import mmengine_template.engine  # noqa: F401,F403
     import mmengine_template.evaluation  # noqa: F401,F403
