@@ -1,4 +1,3 @@
-from .evaluator import Evaluator
-from .metrics import CustomMetric
+from .widerface_metric import WiderFaceMetric
 
-__all__ = ['CustomMetric', 'Evaluator']
+__all__ = ['WiderFaceMetric']
