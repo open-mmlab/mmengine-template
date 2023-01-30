@@ -1,3 +1,3 @@
-from .custom_transform import CustomTransform
+from .widerface_transform import RetinaFacePipeline
 
-__all__ = ['CustomTransform']
+__all__ = ['RetinaFacePipeline']
