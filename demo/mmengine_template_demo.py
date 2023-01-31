@@ -1,8 +1,6 @@
 from argparse import ArgumentParser
 
-from mmengine.registry import DefaultScope
-
-from mmengine_template.infer import CustomInferencer
+from mmengine_template.apis import RetinaFaceInferencer
 
 
 def parse_args():
@@ -19,9 +17,9 @@ def parse_args():
 
 
 def main(args):
-    DefaultScope.get_instance(
-        name='mmengine_template', scope_name='mmengine_template')
-    inferencer = CustomInferencer(
+    # TODO: Support inference of image directory.
+    # build the model from a config file and a checkpoint file
+    inferencer = RetinaFaceInferencer(
         args.config, args.checkpoint, save_path=args.out_file)
     inferencer(args.img, vis_thresh=0.8)
 

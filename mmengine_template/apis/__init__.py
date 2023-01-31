@@ -1,4 +1,3 @@
-from .inference import inference_model, init_model
+from .inference import RetinaFaceInferencer
 
-
-__all__ = ['init_model', 'inference_model']
+__all__ = ['RetinaFaceInferencer']
