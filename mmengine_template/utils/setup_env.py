@@ -26,18 +26,22 @@ def register_all_modules(init_default_scope: bool = True) -> None:
     import mmengine_template.visualization  # noqa: F401,F403
 
     if init_default_scope:
-        never_created = (DefaultScope.get_current_instance() is None or
-                         not DefaultScope.check_instance_created('mmdet'))
+        never_created = (
+            DefaultScope.get_current_instance() is None
+            or not DefaultScope.check_instance_created('mmengine_template'))
         if never_created:
-            DefaultScope.get_instance('mmdet', scope_name='mmdet')
+            DefaultScope.get_instance(
+                'mmengine_template', scope_name='mmengine_template')
             return
         current_scope = DefaultScope.get_current_instance()
-        if current_scope.scope_name != 'mmdet':
-            warnings.warn('The current default scope '
-                          f'"{current_scope.scope_name}" is not "mmdet", '
-                          '`register_all_modules` will force the current'
-                          'default scope to be "mmdet". If this is not '
-                          'expected, please set `init_default_scope=False`.')
+        if current_scope.scope_name != 'mmengine_template':
+            warnings.warn(
+                'The current default scope '
+                f'"{current_scope.scope_name}" is not "mmengine_template", '
+                '`register_all_modules` will force the current'
+                'default scope to be "mmengine_template". If this is not '
+                'expected, please set `init_default_scope=False`.')
             # avoid name conflict
-            new_instance_name = f'mmdet-{datetime.datetime.now()}'
-            DefaultScope.get_instance(new_instance_name, scope_name='mmdet')
+            new_instance_name = f'mmengine_template-{datetime.datetime.now()}'
+            DefaultScope.get_instance(
+                new_instance_name, scope_name='mmengine_template')

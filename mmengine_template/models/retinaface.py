@@ -427,7 +427,7 @@ class RetinaFace(BaseModel):
             self.register_buffer('priors', priors)
         self.loss = MultiBoxLoss(cfg['num_classes'], 0.35, True, 0, True, 7,
                                  0.35, False)
-        self.cfg = cfg
+        self.model_cfg = cfg
 
     def _make_class_head(self, fpn_num=3, inchannels=64, anchor_num=2):
         classhead = nn.ModuleList()
@@ -471,21 +471,24 @@ class RetinaFace(BaseModel):
 
         return bbox_regressions, classifications, ldm_regressions
 
-    def forward(self, inputs, data_samples, mode):
+    def forward(self, inputs, data_samples=None, mode='predict'):
         # NOTE should output tensor rather than numpy
         bbox_regressions, classifications, ldm_regressions = self._forward(
             inputs)
         if mode == 'loss':
+            assert isinstance(data_samples, dict)
             annotations = data_samples['annotations']
             output = (bbox_regressions, classifications, ldm_regressions)
 
             loss_l, loss_c, loss_landm = self.loss(output, self.priors,
                                                    annotations)
             return dict(
-                loss_l=loss_l * self.cfg['loc_weight'],
+                loss_l=loss_l * self.model_cfg['loc_weight'],
                 loss_c=loss_c,
                 loss_landm=loss_landm)
         else:
+            # NOTE datasamples could be None for inference.
+            data_samples = dict() if data_samples is None else data_samples
             # NOTE Currently only support batch size = 1
             loc, conf, landms = (bbox_regressions,
                                  F.softmax(classifications,
@@ -496,19 +499,20 @@ class RetinaFace(BaseModel):
 
             # NOTE w h w h
             scale = inputs.new_tensor([width, height, width, height])
-            priorbox = PriorBox(self.cfg, image_size=(im_height, im_width))
+            priorbox = PriorBox(
+                self.model_cfg, image_size=(im_height, im_width))
             priors = priorbox.forward()
             priors = priors.to(inputs.device)
             prior_data = priors.data
             boxes = decode(
-                loc.data.squeeze(0), prior_data, self.cfg['variance'])
+                loc.data.squeeze(0), prior_data, self.model_cfg['variance'])
             # NOTE support mutiscale inference
             resize = 1
             boxes = boxes * scale / resize
             boxes = boxes.cpu().numpy()
             scores = conf.squeeze(0).data.cpu().numpy()[:, 1]
             landms = decode_landm(
-                landms.data.squeeze(0), prior_data, self.cfg['variance'])
+                landms.data.squeeze(0), prior_data, self.model_cfg['variance'])
             scale1 = inputs.new_tensor([
                 inputs.shape[3], inputs.shape[2], inputs.shape[3],
                 inputs.shape[2], inputs.shape[3], inputs.shape[2],
@@ -519,7 +523,7 @@ class RetinaFace(BaseModel):
             landms = landms.cpu().numpy()
 
             # ignore low scores
-            inds = np.where(scores > self.cfg['score_thresh'])[0]
+            inds = np.where(scores > self.model_cfg['score_thresh'])[0]
             boxes = boxes[inds]
             landms = landms[inds]
             scores = scores[inds]
@@ -534,7 +538,7 @@ class RetinaFace(BaseModel):
             # do NMS
             dets = np.hstack((boxes, scores[:, np.newaxis])).astype(
                 np.float32, copy=False)
-            keep = py_cpu_nms(dets, self.cfg['nms_thresh'])
+            keep = py_cpu_nms(dets, self.model_cfg['nms_thresh'])
             # keep = nms(dets, args.nms_threshold,force_cpu=args.cpu)
             dets = dets[keep, :]
             landms = landms[keep]
