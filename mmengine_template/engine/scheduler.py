@@ -10,9 +10,9 @@ class CustomParameterScheduler(_ParamScheduler):
     ...
 
 
-
 @PARAM_SCHEDULERS.register_module()
-class CustomMomentumScheduler(MomentumSchedulerMixin, CustomParameterScheduler):
+class CustomMomentumScheduler(MomentumSchedulerMixin,
+                              CustomParameterScheduler):
     ...
 
 
