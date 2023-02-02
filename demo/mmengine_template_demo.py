@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 
+from mmengine.registry import DefaultScope
+
 from mmengine_template.apis import RetinaFaceInferencer
 
 
