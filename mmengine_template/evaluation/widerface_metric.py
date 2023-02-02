@@ -33,12 +33,9 @@ class WiderFaceMetric(BaseMetric):
 
         self.annotations = annotations
 
-    def process(self, data_batch, data_samples):
-        return self.add(data_samples)
-
-    def add(self, data_samples):
+    def add(self, gt, preds):
         # NOTE only support batch size = 1
-        filename = data_samples[0]['filename']
+        filename = preds[0]['filename']
         dirname, filename = filename.split(os.sep)[-2:]
         savedir = osp.join(self.saved_dir, dirname)
         savedtxt = ''.join([osp.splitext(osp.basename(filename))[0], '.txt'])
@@ -46,7 +43,7 @@ class WiderFaceMetric(BaseMetric):
         mkdir_or_exist(savedir)
         with open(savedpath, 'w') as f:
             file_basename = osp.splitext(osp.basename(filename))[0]
-            bboxes = data_samples[0]['predictions']
+            bboxes = preds[0]['predictions']
             f.write(f'{file_basename}\n')
             f.write(f'{len(bboxes)}\n')
             for box in bboxes:
@@ -61,10 +58,6 @@ class WiderFaceMetric(BaseMetric):
 
     def compute(self, size):
         return self.compute_metric(size)
-
-    # NOTE for evaluator
-    def evaluate(self, size):
-        return self.compute(size)
 
     def compute_metric(self, size):
         # NOTE only support single gpu test now
