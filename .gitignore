@@ -113,8 +113,6 @@ data
 *.pkl
 *.pkl.json
 *.log.json
-docs/modelzoo_statistics.md
-mmdet/.mim
 work_dirs/
 
 # Pytorch

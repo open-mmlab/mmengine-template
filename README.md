@@ -1,13 +1,13 @@
 # MMEngine Template
 
-**MMEngine Template** is a template for the best practices in MMEngine. Config&Resgitry in [MMEngine](https://github.com/open-mmlab/mmengine) provides an elegant solution for developers to customize their modules and record experimental information. However, due to the learning curve of the Config&Registry system, developers often encounter some problems during developping. Therefore, we provide the **MMEngine Template** to guide developers in achieving the best practices in various deep learning fields based on MMEngine.
+**MMEngine Template** is a template for the best practices in MMEngine. Config&Resgitry in [MMEngine](https://github.com/open-mmlab/mmengine) provides an elegant solution for developers to customize their modules and record experimental information. However, due to the learning curve of the Config&Registry system, developers often encounter some problems during development. Therefore, we provide the **MMEngine Template** to guide developers in achieving the best practices in various deep learning fields based on MMEngine.
 
 You may wonder why there is a need for **MMEngine Template** since the downstream repositories (MMDet, MMCls) of OpenMMLab have already provided a "template". Actually, **MMEngine Template** provides a more lightweight development standard compared to the downstream algorithm repositories. **MMEngine Template** is designed to provide a generic development template to simplify the development process based on MMEngine.
 
 Compared with downstream repositories, **MMEngine Template**:
 
-- A more concise directory structure for easier maintenance. Since most of developers do not need to customize lots of datasets, hooks, loops, etc., there is not need to create too much nested directory.
-- Looser standards for the data flow. OpenMMLab series repositories need to obey a more strict dataflow based on `mmengine.structures.BaseDataElement`, which is not necessary for most individual developers. Therefore, **MMEngine Template** does not require developers to format the data to `mmengine.structures.BaseDataElement` instance in data flow.
+- A more concise directory structure for easier maintenance. Since most developers do not need to customize lots of datasets, hooks, loops, etc., creating too many nested directory is unnecessary.
+- Looser standards for the data flow. OpenMMLab series repositories need to obey a more strict dataflow based on `mmengine.structures.BaseDataElement`, which is unnecessary for most individual developers. Therefore, **MMEngine Template** does not require developers to format the data to `mmengine.structures.BaseDataElement` instance in the data flow.
 - Looser code standards, developers no longer struggle to fix mypy errors.
 
 Since developers often meet the error of "Unregistered module xxx" for the lack of triggering the registerring, **MMEngine Template** also will register the module automatically if developers follow the default [directory structure](#directory-structure).
@@ -60,7 +60,7 @@ Since developers often meet the error of "Unregistered module xxx" for the lack 
 
 ## How to use
 
-Assuming you have already understood the basic process of developing based on MMEngine, then when developing based on **MMEngine Template**, you need to customize your module in `datasets/datasets.py`, `datasets/transform.py`, `models/models.py`, etc., and training pipelines will be automatically built in `mmengine.Runner`. **MMEngine Template** provides a general training/testing/inferring script in `tools` and `demo`, and you can directly use them in command line.
+Assuming you have already understood the basic process of developing based on MMEngine, then when developing based on **MMEngine Template**, you need to customize your module in `datasets/datasets.py`, `datasets/transform.py`, `models/models.py`, etc., and training pipelines will be automatically built in `mmengine.Runner`. **MMEngine Template** provides a general training/testing/inferring script in `tools` and `demo`, and you can directly use them in the command line.
 
 For advanced users, you may need to customize more components and register more modules. When developing, remember to update the locations parameter in registry.py when adding new modules to ensure that the newly added modules are correctly registered.
 

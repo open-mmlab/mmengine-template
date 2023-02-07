@@ -4,7 +4,7 @@ If OpenMMLab series repositries have supported the target dataset, for example,
 CocoDataset. You can simply use it by setting ``type=mmdet.CocoDataset`` in the
 config file.
 
-If you want to do some small modification to the existed dataset,
+If you want to do some small modifications to the existing dataset,
 you can inherit from it and override its methods:
 
 Examples:
@@ -14,8 +14,8 @@ Examples:
     >>>     def load_data_list(self):
     >>>         ...
 
-Don't worry about the dulicated name of the custom ``CocoDataset`` and the
-mmdet ``CocoDataset``, they are registered into different registry node.
+Don't worry about the duplicated name of the custom ``CocoDataset`` and the
+mmdet ``CocoDataset``, they are registered into different registry nodes.
 
 The default implementation only does the register process. Users need to rename
 the ``CustomDataset`` to the real name of the target dataset, for example,
