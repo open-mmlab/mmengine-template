@@ -21,7 +21,7 @@ Since developers often meet the error of "Unregistered module xxx" for the lack 
    mim install mmengine
    python -c 'from mmengine.utils.dl_utils import collect_env;print(collect_env())'
    ```
-3. If MMCV is needed:
+3. If MMCV is required:
    ```bash
    mim install mmcv>=2.0.0rc0
    ```
