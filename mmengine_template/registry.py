@@ -23,6 +23,12 @@ from mmengine.registry import \
     WEIGHT_INITIALIZERS as MMENGINE_WEIGHT_INITIALIZERS
 from mmengine.registry import Registry
 
+# If MMCV is installed, cnn block and transforms will be registered.
+try:
+    import mmcv  # noqa: F401
+except:  # noqa: E722
+    ...
+
 # manage all kinds of runners like `EpochBasedRunner` and `IterBasedRunner`
 RUNNERS = Registry('runner', parent=MMENGINE_RUNNERS)
 # manage runner constructors that define how to initialize runners

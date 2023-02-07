@@ -16,10 +16,14 @@ Since developers often meet the error of "Unregistered module xxx" for the lack 
 
 1. Follow the [official guide](https://pytorch.org/get-started/locally/) to install PyTorch.
 2. Install MMEngine
-   ```
+   ```bash
    pip install -U openmim
    mim install mmengine
    python -c 'from mmengine.utils.dl_utils import collect_env;print(collect_env())'
+   ```
+3. If MMCV is needed:
+   ```bash
+   mim install mmcv>=2.0.0rc0
    ```
 
 ## Directory structure
