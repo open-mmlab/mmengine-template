@@ -1,4 +1,3 @@
-# Copyright (c) OpenMMLab. All rights reserved.
 import mmengine
 import mmengine.runner.runner as runner
 from mmengine.utils import digit_version

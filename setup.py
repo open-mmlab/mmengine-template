@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Copyright (c) OpenMMLab. All rights reserved.
 import os
 import os.path as osp
 import platform
@@ -7,8 +6,6 @@ import shutil
 import sys
 import warnings
 from setuptools import find_packages, setup
-
-from torch.utils.cpp_extension import BuildExtension
 
 
 def readme():
@@ -183,6 +180,4 @@ if __name__ == '__main__':
         python_requires='>=3.7',
         license='Apache License 2.0',
         install_requires=parse_requirements('requirements.txt'),
-        ext_modules=[],
-        cmdclass={'build_ext': BuildExtension},
         zip_safe=False)
