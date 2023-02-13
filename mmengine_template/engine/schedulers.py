@@ -6,7 +6,6 @@ scheduer here.
 
 The default implementation only does the register process. Users need to rename
 the ``CustomXXXcheduler`` to the real name of the scheduler and implement it.
-it.
 """  # noqa: E501
 from mmengine.optim import _ParamScheduler
 from mmengine.optim.scheduler.lr_scheduler import LRSchedulerMixin

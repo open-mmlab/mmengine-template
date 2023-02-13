@@ -5,7 +5,6 @@ in MMEngine to customize your inferencer.
 
 The default implementation only does the register process. Users need to rename
 the ``CustomXXXcheduler`` to the real name of the inferencer and implement it.
-it.
 """  # noqa: E501
 
 import os.path as osp

@@ -5,7 +5,6 @@ Users can customize the initializer in this file.
 
 The default implementation only does the register process. Users need to rename
 the ``CustomInitializer`` to the real name of the initializer and implement it.
-it.
 """  # noqa: E501
 
 from mmengine.model.weight_init import BaseInit

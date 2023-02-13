@@ -5,7 +5,6 @@ in MMEngine to implement CustomModel
 
 The default implementation only does the register process. Users need to rename
 the ``CustomModel`` to the real name of the model and implement it.
-it.
 """  # noqa: E501
 from mmengine.model import BaseModel
 

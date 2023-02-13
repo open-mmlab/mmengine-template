@@ -6,7 +6,6 @@ gradient accumulation .etc.) wrapper on pytorch Optimizer, users do not need to
 
 The default implementation only does the register process. Users need to rename
 the ``CustomOptimWrapper`` to the real name of the optimizer and implement it.
-it.
 """
 from mmengine.optim import OptimWrapper
 

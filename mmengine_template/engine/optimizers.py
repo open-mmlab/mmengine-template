@@ -5,7 +5,6 @@ If you want to use a custom optimizer which has not been implemented by
 
 The default implementation only does the register process. Users need to rename
 the ``CustomOptimizer`` to the real name of the optimizer and implement it.
-it.
 """
 
 from torch.optim import Optimizer
