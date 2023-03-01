@@ -1,3 +1,3 @@
-from .inference import CustomInferencer
+from .inference import RetinaFaceInferencer
 
-__all__ = ['CustomInferencer']
+__all__ = ['RetinaFaceInferencer']

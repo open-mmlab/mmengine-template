@@ -1,82 +1,73 @@
-"""This module is to define the inferencer which will be used in ``demo.py``
-
-Follow the `guide <https://mmengine.readthedocs.io/zh_CN/latest/design/infer.html>`
-in MMEngine to customize your inferencer.
-
-The default implementation only does the register process. Users need to rename
-the ``CustomXXXcheduler`` to the real name of the inferencer and implement it.
-"""  # noqa: E501
-
+# Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
 import numpy as np
 import torch
-from mmcv import imread
+from mmcv import imread, imwrite
 from mmengine.device import get_device
 from mmengine.infer import BaseInferencer
-from mmengine.registry import INFERENCERS
+from mmengine.utils import mkdir_or_exist
 from mmengine.visualization import Visualizer
 
 
-@INFERENCERS.register_module()
-class CustomInferencer(BaseInferencer):
+class RetinaFaceInferencer(BaseInferencer):
+    visualize_kwargs = {'vis_thresh'}
+
+    def __init__(self, *args, save_path=None, **kwargs):
+        if save_path is not None:
+            mkdir_or_exist(save_path)
+        self.save_path = save_path
+        super().__init__(*args, **kwargs)
 
     def _init_visualizer(self, cfg):
-        """Return custom visualizer.
-
-        The returned visualizer will be set as ``self.visualzier``.
-        """
-        if cfg.get('visualizer') is not None:
-            visualizer = cfg.visualizer
-            visualizer.setdefault('name', 'mmengine_template')
-            return Visualizer.get_instance(**cfg.visualizer)
-        return Visualizer(name='mmengine_template')
+        return Visualizer('retinaface')
 
     def _init_pipeline(self, cfg):
-        """Return a pipeline to process input data.
-
-        The returned pipeline should be a callable object and will be set as
-        ``self.visualizer``
-
-        This default implementation will read the image and convert it to a
-        Tensor with shape (C, H, W) and dtype torch.float32. Also, users can
-        build the pipeline from the ``cfg``.
-        """
         device = get_device()
 
         def naive_pipeline(image):
             image = np.float32(imread(image))
+            image -= (104, 117, 123)
             image = image.transpose(2, 0, 1)
             image = torch.from_numpy(image).to(device)
             return dict(inputs=image)
 
         return naive_pipeline
 
-    def visualize(self, inputs, preds, show=False):
-        """Visualize the predictions on the original inputs."""
+    def visualize(self, inputs, preds, show=False, vis_thresh=0.8, **kwargs):
         visualization = []
         for image_path, pred in zip(inputs, preds):
             image = imread(image_path)
             self.visualizer.set_image(image)
-            # NOTE The implementation of visualization is left to the user.
-            ...
+            for single_label in pred['predictions']:
+                score = single_label[4]
+                if score < vis_thresh:
+                    continue
+                text = f'{score:.4f}'
+
+                landms = single_label[5:]
+                self.visualizer.draw_bboxes(single_label[:4])
+                self.visualizer.draw_texts(text, single_label[:2])
+                self.visualizer.draw_circles(landms[:2], np.array([1]),
+                                             (0, 0, 225))
+                self.visualizer.draw_circles(landms[2:4], np.array([1]),
+                                             (0, 255, 225))
+                self.visualizer.draw_circles(landms[4:6], np.array([1]),
+                                             (255, 0, 225))
+                self.visualizer.draw_circles(landms[6:8], np.array([1]),
+                                             (0, 255, 0))
+                self.visualizer.draw_circles(landms[8:10], np.array([1]),
+                                             (255, 0, 0))
             if show:
                 self.visualizer.show()
             vis_result = self.visualizer.get_image()
-            # Return the visualization for post process.
             visualization.append(
                 dict(image=vis_result, filename=osp.basename(image_path)))
         return visualization
 
-    def postprocess(self, preds, visualization, return_datasample=False):
-        """Apply post process to the predictions and visualization.
-
-        For example, you can save the predictions or visualization to files in
-        this method.
-
-        Note:
-            The parameter ``return_datasample`` should only be used when
-            ``model.forward`` output a list of datasample instance.
-        """
-        ...
+    def postprocess(self, preds, visualization, *args, **kwargs):
+        if self.save_path is not None:
+            for vis in visualization:
+                image, filename = vis['image'], vis['filename']
+                imwrite(image, osp.join(self.save_path, filename))
         return dict(predictions=preds, visualization=visualization)
