@@ -6,12 +6,12 @@ import tempfile
 
 import numpy as np
 import tqdm
+from mmcv.ops import bbox_overlaps
 from mmengine.utils import mkdir_or_exist
 from mmeval import BaseMetric
 from scipy.io import loadmat
 
 from mmengine_template.registry import METRICS
-from .bbox import bbox_overlaps
 
 
 @METRICS.register_module()
