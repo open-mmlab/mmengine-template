@@ -6,11 +6,10 @@ You may wonder why there is a need for **MMEngine Template** since the downstrea
 
 Compared with downstream repositories, **MMEngine Template**:
 
-- A more concise directory structure for easier maintenance. Since most developers do not need to customize lots of datasets, hooks, loops, etc., creating too many nested directory is unnecessary.
-- Looser standards for the data flow. OpenMMLab series repositories need to obey a more strict dataflow based on `mmengine.structures.BaseDataElement`, which is unnecessary for most individual developers. Therefore, **MMEngine Template** does not require developers to format the data to `mmengine.structures.BaseDataElement` instance in the data flow.
-- Looser code standards, developers no longer struggle to fix mypy errors.
+- A simpler directory structure for easier maintenance. Since most developers do not need to customize multiple datasets, hooks, loops, etc., creating excessive nested directories is unnecessary.
+- A more flexible data flow format. The data flow standards in OpenMMLab series repositories are quite strict and require compliance with `mmengine.structures.BaseDataElement`, which is not necessary for most individual developers. As a result, the MMEngine Template relaxes these standards and does not require developers to format their data as `mmengine.structures.BaseDataElement` instances in the data flow.
 
-Since developers often meet the error of "Unregistered module xxx" for the lack of triggering the registerring, **MMEngine Template** also will register the module automatically if developers follow the default [directory structure](#directory-structure).
+Developers often encounter the "Unregistered module xxx" error when they fail to trigger registration. To prevent this issue, the MMEngine Template automatically registers the module if developers follow the [default directory structure](#directory-structure).
 
 ## Installation
 
@@ -23,7 +22,7 @@ Since developers often meet the error of "Unregistered module xxx" for the lack 
    ```
 3. If MMCV is required:
    ```bash
-   mim install mmcv>=2.0.0rc0
+   mim install "mmcv>=2.0.0"
    ```
 
 ## Directory structure
@@ -66,6 +65,8 @@ Since developers often meet the error of "Unregistered module xxx" for the lack 
 
 Assuming you have already understood the basic process of developing based on MMEngine, then when developing based on **MMEngine Template**, you need to customize your module in `datasets/datasets.py`, `datasets/transform.py`, `models/models.py`, etc., and training pipelines will be automatically built in `mmengine.Runner`. **MMEngine Template** provides a general training/testing/inferring script in `tools` and `demo`, and you can directly use them in the command line.
 
+Besides, there are lots of `mmengine-template` or `mmengine_template` in this project, including file name, module name and scope name, you need to replace them with your own project name before organizing your code.
+
 For advanced users, you may need to customize more components and register more modules. When developing, remember to update the locations parameter in registry.py when adding new modules to ensure that the newly added modules are correctly registered.
 
-**MMEngine Template** will continuously update new branches to support various deep learning tasks in different fields, so stay tuned.
+**MMEngine Template** will continuously update new branches to support various deep-learning tasks in different fields, so stay tuned.
