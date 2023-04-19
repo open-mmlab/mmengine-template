@@ -121,3 +121,7 @@ Besides, there are lots of `mmengine-template` or `mmengine_template` in this pr
 For advanced users, you may need to customize more components and register more modules. When developing, remember to update the locations parameter in registry.py when adding new modules to ensure that the newly added modules are correctly registered.
 
 **MMEngine Template** will continuously update new branches to support various deep-learning tasks in different fields, so stay tuned.
+
+## Acknowledgements
+
+- [PyTorch_Retinaface](https://github.com/biubug6/Pytorch_Retinaface)
