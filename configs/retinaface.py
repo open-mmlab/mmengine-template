@@ -62,7 +62,7 @@ test_dataloader = dict(
             rgb_means=(104, 117, 123),
         ),
         training=False),
-    batch_size=24,
+    batch_size=12,
     num_workers=2,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),

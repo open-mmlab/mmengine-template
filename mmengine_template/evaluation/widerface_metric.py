@@ -7,9 +7,9 @@ from collections import defaultdict
 
 import numpy as np
 import torch
-import tqdm
 from mmcv.ops import bbox_overlaps
 from mmeval import BaseMetric
+from rich.progress import track
 from scipy.io import loadmat
 
 from mmengine_template.registry import METRICS
@@ -154,10 +154,8 @@ def read_pred_file(filepath):
 def get_preds(pred_dir):
     events = os.listdir(pred_dir)
     boxes = dict()
-    pbar = tqdm.tqdm(events)
 
-    for event in pbar:
-        pbar.set_description('Reading Predictions ')
+    for event in track(events, description='Reading Predictions '):
         event_dir = os.path.join(pred_dir, event)
         event_images = os.listdir(event_dir)
         current_event = dict()
@@ -289,9 +287,9 @@ def evaluation(pred, gt_path, iou_thresh=0.5):
         count_face = 0
         pr_curve = np.zeros((thresh_num, 2)).astype('float')
         # [hard, medium, easy]
-        pbar = tqdm.tqdm(range(event_num))
-        for i in pbar:
-            pbar.set_description(f'Processing {settings[setting_id]}')
+        for i in track(
+            range(event_num), description=f'Processing {settings[setting_id]}'
+        ):
             event_name = str(event_list[i][0][0])
             img_list = file_list[i][0]
             pred_list = pred[event_name]

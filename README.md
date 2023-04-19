@@ -1,15 +1,8 @@
-# MMEngine Template
+## Introduction
 
-**MMEngine Template** is a template for the best practices in MMEngine. Config&Resgitry in [MMEngine](https://github.com/open-mmlab/mmengine) provides an elegant solution for developers to customize their modules and record experimental information. However, due to the learning curve of the Config&Registry system, developers often encounter some problems during development. Therefore, we provide the **MMEngine Template** to guide developers in achieving the best practices in various deep learning fields based on MMEngine.
+This branch is a refactored version of [PyTorch_Retinaface](https://github.com/biubug6/Pytorch_Retinaface), based on the **mmengine-template**. I would like to express my gratitude to the creators of PyTorch_Retinaface for their excellent work on implementing RetinaFace using PyTorch. Their project has been immensely helpful for developers interested in studying and applying RetinaFace.
 
-You may wonder why there is a need for **MMEngine Template** since the downstream repositories (MMDet, MMCls) of OpenMMLab have already provided a "template". Actually, **MMEngine Template** provides a more lightweight development standard compared to the downstream algorithm repositories. **MMEngine Template** is designed to provide a generic development template to simplify the development process based on MMEngine.
-
-Compared with downstream repositories, **MMEngine Template**:
-
-- A simpler directory structure for easier maintenance. Since most developers do not need to customize multiple datasets, hooks, loops, etc., creating excessive nested directories is unnecessary.
-- A more flexible data flow format. The data flow standards in OpenMMLab series repositories are quite strict and require compliance with `mmengine.structures.BaseDataElement`, which is not necessary for most individual developers. As a result, the MMEngine Template relaxes these standards and does not require developers to format their data as `mmengine.structures.BaseDataElement` instances in the data flow.
-
-Developers often encounter the "Unregistered module xxx" error when they fail to trigger registration. To prevent this issue, the MMEngine Template automatically registers the module if developers follow the [default directory structure](#directory-structure).
+In the field of deep learning, new training techniques and mature training pipelines are constantly being developed, which have significantly improved the efficiency of training. OpenMMLab's new generation training framework, [**MMEngine**](https://github.com/open-mmlab/mmengine), offers a range of out-of-the-box tools and high-performance training pipelines. Its standardized training process has greatly enhanced the scalability of projects. With this branch, RetinaFace has been refactored with MMEngine to provide users with a more efficient training experience.
 
 ## Installation
 
@@ -24,6 +17,66 @@ Developers often encounter the "Unregistered module xxx" error when they fail to
    ```bash
    mim install "mmcv>=2.0.0"
    ```
+
+## Training/Testing/Inference
+
+### Prepare dataset
+
+1. [dataset URL](https://pan.baidu.com/s/15A9TGQvqqWIKr8OJnuRoJg?pwd=fexq) with Baidu Cloud
+2. Access Code：`fexq`
+3. extract the dataset to `data/widerface`
+
+### prepare environment
+
+1. Install PyTorch according to the official [tutorial](https://pytorch.org/get-started/locally/).
+2. install requirements
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+### Training
+
+1. Single GPU training
+  ```bash
+  python tools/train.py configs/retinaface.py --work-dir work_dirs/retinanet --cfg-options train_dataloader.batch_size=24 --amp
+  ```
+
+2. MultiGPU training
+  ```bash
+   ./tools/dist_train.sh configs/retinaface.py 4 --work-dir ./work_dirs/retinanet --amp
+  ```
+
+### Testing
+
+1. Single GPU testing
+  ```bash
+   python tools/test.py configs/retinaface.py work_dirs/retinanet/epoch_100.pth
+  ```
+
+2. MultiGPU testing
+  ```bash
+  ./tools/dist_test.sh configs/retinaface.py work_dirs/retinanet/epoch_100.pth 4
+  ```
+
+### Inference
+
+  ```bash
+  python demo/mmengine_template_demo.py demo/test.jpg configs/retinaface.py work_dirs/retinanet/epoch_100.pth
+  ```
+
+
+## What is mmengine-template?
+
+**MMEngine Template** is a template for the best practices in MMEngine. Config&Resgitry in [MMEngine](https://github.com/open-mmlab/mmengine) provides an elegant solution for developers to customize their modules and record experimental information. However, due to the learning curve of the Config&Registry system, developers often encounter some problems during development. Therefore, we provide the **MMEngine Template** to guide developers in achieving the best practices in various deep learning fields based on MMEngine.
+
+You may wonder why there is a need for **MMEngine Template** since the downstream repositories (MMDet, MMCls) of OpenMMLab have already provided a "template". Actually, **MMEngine Template** provides a more lightweight development standard compared to the downstream algorithm repositories. **MMEngine Template** is designed to provide a generic development template to simplify the development process based on MMEngine.
+
+Compared with downstream repositories, **MMEngine Template**:
+
+- A simpler directory structure for easier maintenance. Since most developers do not need to customize multiple datasets, hooks, loops, etc., creating excessive nested directories is unnecessary.
+- A more flexible data flow format. The data flow standards in OpenMMLab series repositories are quite strict and require compliance with `mmengine.structures.BaseDataElement`, which is not necessary for most individual developers. As a result, the MMEngine Template relaxes these standards and does not require developers to format their data as `mmengine.structures.BaseDataElement` instances in the data flow.
+
+Developers often encounter the "Unregistered module xxx" error when they fail to trigger registration. To prevent this issue, the MMEngine Template automatically registers the module if developers follow the [default directory structure](#directory-structure).
 
 ## Directory structure
 
