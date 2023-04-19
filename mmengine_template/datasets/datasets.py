@@ -51,7 +51,7 @@ class WiderFaceDataset(Dataset):
         img = cv2.imread(self.imgs_path[index])
 
         labels = self.words[index]
-        data_samples['ori_shape'] = img.shape[:2]
+        data_samples['ori_shape'] = np.array(img.shape[:2])
         data_samples['filename'] = self.imgs_path[index]
         if self.training:
             annotations = np.zeros((0, 15))

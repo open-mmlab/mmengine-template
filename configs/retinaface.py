@@ -62,7 +62,7 @@ test_dataloader = dict(
             rgb_means=(104, 117, 123),
         ),
         training=False),
-    batch_size=1,
+    batch_size=24,
     num_workers=2,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -99,9 +99,11 @@ optim_wrapper = dict(
 test_evaluator = dict(
     type='WiderFaceMetric',
     annotations='./data/widerface/eval_tools/ground_truth/',
-    saved_path='./widerface_txt')
+    saved_path='./widerface_txt',
+    dist_backend='torch_cuda')
 
 val_evaluator = dict(
     type='WiderFaceMetric',
     annotations='./data/widerface/eval_tools/ground_truth/',
-    saved_path='./widerface_txt')
+    saved_path='./widerface_txt',
+    dist_backend='torch_cuda')
