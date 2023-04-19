@@ -30,40 +30,44 @@ In the field of deep learning, new training techniques and mature training pipel
 
 1. Install PyTorch according to the official [tutorial](https://pytorch.org/get-started/locally/).
 2. install requirements
-  ```bash
-  pip install -r requirements.txt
-  ```
+
+```bash
+pip install -r requirements.txt
+```
 
 ### Training
 
 1. Single GPU training
-  ```bash
-  python tools/train.py configs/retinaface.py --work-dir work_dirs/retinanet --cfg-options train_dataloader.batch_size=24 --amp
-  ```
+
+```bash
+python tools/train.py configs/retinaface.py --work-dir work_dirs/retinanet --cfg-options train_dataloader.batch_size=24 --amp
+```
 
 2. MultiGPU training
-  ```bash
-   ./tools/dist_train.sh configs/retinaface.py 4 --work-dir ./work_dirs/retinanet --amp
-  ```
+
+```bash
+ ./tools/dist_train.sh configs/retinaface.py 4 --work-dir ./work_dirs/retinanet --amp
+```
 
 ### Testing
 
 1. Single GPU testing
-  ```bash
-   python tools/test.py configs/retinaface.py work_dirs/retinanet/epoch_100.pth
-  ```
+
+```bash
+ python tools/test.py configs/retinaface.py work_dirs/retinanet/epoch_100.pth
+```
 
 2. MultiGPU testing
-  ```bash
-  ./tools/dist_test.sh configs/retinaface.py work_dirs/retinanet/epoch_100.pth 4
-  ```
+
+```bash
+./tools/dist_test.sh configs/retinaface.py work_dirs/retinanet/epoch_100.pth 4
+```
 
 ### Inference
 
-  ```bash
-  python demo/mmengine_template_demo.py demo/test.jpg configs/retinaface.py work_dirs/retinanet/epoch_100.pth
-  ```
-
+```bash
+python demo/mmengine_template_demo.py demo/test.jpg configs/retinaface.py work_dirs/retinanet/epoch_100.pth
+```
 
 ## What is mmengine-template?
 

@@ -288,8 +288,8 @@ def evaluation(pred, gt_path, iou_thresh=0.5):
         pr_curve = np.zeros((thresh_num, 2)).astype('float')
         # [hard, medium, easy]
         for i in track(
-            range(event_num), description=f'Processing {settings[setting_id]}'
-        ):
+                range(event_num),
+                description=f'Processing {settings[setting_id]}'):
             event_name = str(event_list[i][0][0])
             img_list = file_list[i][0]
             pred_list = pred[event_name]
