@@ -3,11 +3,12 @@ import os.path as osp
 import pickle
 import shutil
 import tempfile
+from collections import defaultdict
 
 import numpy as np
+import torch
 import tqdm
 from mmcv.ops import bbox_overlaps
-from mmengine.utils import mkdir_or_exist
 from mmeval import BaseMetric
 from scipy.io import loadmat
 
@@ -34,35 +35,27 @@ class WiderFaceMetric(BaseMetric):
         self.annotations = annotations
 
     def add(self, gt, preds):
-        # NOTE only support batch size = 1
-        filename = preds[0]['filename']
-        dirname, filename = filename.split(os.sep)[-2:]
-        savedir = osp.join(self.saved_dir, dirname)
-        savedtxt = ''.join([osp.splitext(osp.basename(filename))[0], '.txt'])
-        savedpath = osp.join(savedir, savedtxt)
-        mkdir_or_exist(savedir)
-        with open(savedpath, 'w') as f:
-            file_basename = osp.splitext(osp.basename(filename))[0]
-            bboxes = preds[0]['predictions']
-            f.write(f'{file_basename}\n')
-            f.write(f'{len(bboxes)}\n')
-            for box in bboxes:
-                x = int(box[0])
-                y = int(box[1])
-                w = int(box[2]) - int(box[0])
-                h = int(box[3]) - int(box[1])
-                confidence = str(box[4])
-                line = str(x) + ' ' + str(y) + ' ' + str(w) + ' ' + str(
-                    h) + ' ' + confidence + ' \n'
-                f.write(line)
+        for pred in preds:
+            filename = pred['filename']
+            event, image_name = filename.split(os.sep)[-2:]
+            bboxes = pred['predictions'][:, :5]
+            bboxes = bboxes.cpu().numpy()
+            bboxes[:, 2:4] = bboxes[:, 2:4] - bboxes[:, :2]
+            result = dict()
+            result['event'] = event
+            result['bboxes'] = bboxes
+            result['image_name'] = osp.splitext(image_name)[0]
+            self._results.append(result)
 
-    def compute(self, size):
-        return self.compute_metric(size)
+    def compute_metric(self, results):
+        preds = defaultdict(dict)
+        for result in results:
+            event = result['event']
+            bboxes = result['bboxes']
+            image_name = result['image_name']
+            preds[event][image_name] = bboxes
 
-    def compute_metric(self, size):
-        # NOTE only support single gpu test now
-        # NOTE must return a dict result
-        result = evaluation(self.saved_dir, self.annotations)
+        result = evaluation(preds, self.annotations)
         if self.remove_tmp_dir:
             shutil.rmtree(self.saved_dir)
         return result
@@ -216,7 +209,8 @@ def image_eval(pred, gt, ignore, iou_thresh):
     _gt[:, 2] = _gt[:, 2] + _gt[:, 0]
     _gt[:, 3] = _gt[:, 3] + _gt[:, 1]
 
-    overlaps = bbox_overlaps(_pred[:, :4], _gt)
+    overlaps = bbox_overlaps(
+        torch.from_numpy(_pred[:, :4]), torch.from_numpy(_gt)).numpy()
 
     for h in range(_pred.shape[0]):
 
@@ -280,7 +274,7 @@ def voc_ap(rec, prec):
 
 
 def evaluation(pred, gt_path, iou_thresh=0.5):
-    pred = get_preds(pred)
+    # pred = get_preds(pred)
     norm_score(pred)
     facebox_list, event_list, file_list, hard_gt_list, medium_gt_list, \
         easy_gt_list = get_gt_boxes(gt_path)

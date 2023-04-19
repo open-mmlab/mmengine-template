@@ -69,14 +69,14 @@ def main():
 
     # enable automatic-mixed-precision training
     if args.amp is True:
-        optim_wrapper = cfg.optim_wrapper.type
+        optim_wrapper = cfg.optim_wrapper.get('type', None)
         if optim_wrapper == 'AmpOptimWrapper':
             print_log(
                 'AMP training is already enabled in your config.',
                 logger='current',
                 level=logging.WARNING)
         else:
-            assert optim_wrapper == 'OptimWrapper', (
+            assert optim_wrapper == 'OptimWrapper' or optim_wrapper is None, (
                 '`--amp` is only supported when the optimizer wrapper type is '
                 f'`OptimWrapper` but got {optim_wrapper}.')
             cfg.optim_wrapper.type = 'AmpOptimWrapper'
