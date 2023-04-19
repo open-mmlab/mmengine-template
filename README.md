@@ -7,11 +7,9 @@ In the field of deep learning, new training techniques and mature training pipel
 ## Installation
 
 1. Follow the [official guide](https://pytorch.org/get-started/locally/) to install PyTorch.
-2. Install MMEngine
+2. Install requirements
    ```bash
-   pip install -U openmim
-   mim install mmengine
-   python -c 'from mmengine.utils.dl_utils import collect_env;print(collect_env())'
+   pip install -r requirements.txt
    ```
 3. If MMCV is required:
    ```bash
@@ -22,17 +20,17 @@ In the field of deep learning, new training techniques and mature training pipel
 
 ### Prepare dataset
 
-1. [dataset URL](https://pan.baidu.com/s/15A9TGQvqqWIKr8OJnuRoJg?pwd=fexq) with Baidu Cloud
-2. Access Code：`fexq`
-3. extract the dataset to `data/widerface`
-
-### prepare environment
-
-1. Install PyTorch according to the official [tutorial](https://pytorch.org/get-started/locally/).
-2. install requirements
+1. Download [dataset](https://pan.baidu.com/s/15A9TGQvqqWIKr8OJnuRoJg?pwd=fexq); Access Code：`fexq`
+2. extract the dataset to `data/widerface`
 
 ```bash
 pip install -r requirements.txt
+```
+
+### Setup PYTHONPATH
+
+```bash
+export PYTHONPATH=$PWD:$PYTHONPATH
 ```
 
 ### Training
