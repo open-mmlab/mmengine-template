@@ -11,10 +11,6 @@ In the field of deep learning, new training techniques and mature training pipel
    ```bash
    pip install -r requirements.txt
    ```
-3. If MMCV is required:
-   ```bash
-   mim install "mmcv>=2.0.0"
-   ```
 
 ## Training/Testing/Inference
 
